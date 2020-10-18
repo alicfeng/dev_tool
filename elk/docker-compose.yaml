@@ -1,0 +1,48 @@
+version: "3"
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: hub-mirror.c.163.com/library/elasticsearch:7.1.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      discovery.type: single-node
+    restart: always
+
+  kibana:
+    container_name: kibana
+    image: hub-mirror.c.163.com/library/kibana:7.1.1
+    ports:
+      - 5601:5601
+    environment:
+      I18N_LOCALE: zh-CN
+    restart: always
+
+  logstash:
+    container_name: logstash
+    image: hub-mirror.c.163.com/library/logstash:7.1.1
+    volumes:
+      - ./srv/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./srv/logstash/conf.d:/usr/share/logstash/conf.d/:ro
+    ports:
+      - 5044:5044
+    restart: always
+
+  filebeat:
+    container_name: filebeat
+    image: store/elastic/filebeat:7.1.1
+    user: root
+    command: ["--strict.perms=false"]
+    volumes:
+      - ./.data/log/:/var/log/nginx/:ro
+      - ./srv/filebeat/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
+
+networks:
+  default:
+    external:
+      name: dev-network
