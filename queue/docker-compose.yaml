@@ -4,7 +4,7 @@ services:
     container_name: ev-zookeeper
     image: wurstmeister/zookeeper
     ports:
-      - ${ZOOKEEPER_PORT}:2181
+      - ${ZOOKEEPER_PORT:-2181}:2181
     restart: always
 
   ev-kafka:
@@ -28,4 +28,4 @@ services:
 networks:
   default:
     external:
-      name: ev-dev-network
+      name: dev-network

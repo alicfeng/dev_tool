@@ -1,8 +1,8 @@
 version: "3"
 services:
   ev-mysql:
-    container_name: ev-mysql
-    image: mysql:5.7
+    container_name: mysql
+    image: mysql:${MYSQL_VERSION:-5.7}
     ports:
       - ${MYSQL_PORT}:3306
     volumes:
@@ -16,8 +16,8 @@ services:
     restart: always
 
   ev-redis:
-    container_name: ev-redis
-    image: redis:4.0.12
+    container_name: redis
+    image: redis:${REDIS_VERSION:-4.0.12}
     ports:
       - ${REDIS_PORT}:6379
     volumes:
@@ -28,4 +28,4 @@ services:
 networks:
   default:
     external:
-      name: ev-dev-network
+      name: dev-network
