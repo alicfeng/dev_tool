@@ -1,0 +1,31 @@
+version: '3'
+services:
+  ev-zookeeper:
+    container_name: ev-zookeeper
+    image: wurstmeister/zookeeper
+    ports:
+      - ${ZOOKEEPER_PORT}:2181
+    restart: always
+
+  ev-kafka:
+    container_name: ev-kafka
+    image: wurstmeister/kafka
+    depends_on:
+      - ev-zookeeper
+    links:
+      - ev-zookeeper
+    ports:
+      - ${KAFKA_PORT}:9092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: ev-zookeeper:${ZOOKEEPER_PORT}
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:${KAFKA_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${MACHINE_IP}:${KAFKA_PORT}
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: ${KAFKA_CREATE_TOPICS}
+    restart: always
+
+networks:
+  default:
+    external:
+      name: ev-dev-network

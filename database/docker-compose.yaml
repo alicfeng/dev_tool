@@ -1,0 +1,31 @@
+version: "3"
+services:
+  ev-mysql:
+    container_name: ev-mysql
+    image: mysql:5.7
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - ./.data/mysql:/var/lib/mysql
+      - ./srv/mysql/config/my.cnf:/etc/mysql/my.cnf:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    restart: always
+
+  ev-redis:
+    container_name: ev-redis
+    image: redis:4.0.12
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - ./.data/redis:/data
+      - ./srv/redis/redis.conf:/etc/redis/redis.conf:ro
+    restart: always
+
+networks:
+  default:
+    external:
+      name: ev-dev-network

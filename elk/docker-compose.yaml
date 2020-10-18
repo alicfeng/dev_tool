@@ -2,36 +2,36 @@ version: "3"
 services:
   elasticsearch:
     container_name: elasticsearch
-    image: hub-mirror.c.163.com/library/elasticsearch:7.1.1
+    image: hub-mirror.c.163.com/library/elasticsearch:${ELK_VERSION:-latest}
     ports:
-      - 9200:9200
-      - 9300:9300
+      - ${ES_HTTP_PORT:-9200}:9200
+      - ${ES_TCP_PORT:-9300}:9300
     environment:
       discovery.type: single-node
     restart: always
 
   kibana:
     container_name: kibana
-    image: hub-mirror.c.163.com/library/kibana:7.1.1
+    image: hub-mirror.c.163.com/library/kibana:${ELK_VERSION:-latest}
     ports:
-      - 5601:5601
+      - ${KIBANA_PORT:-5601}:5601
     environment:
       I18N_LOCALE: zh-CN
     restart: always
 
   logstash:
     container_name: logstash
-    image: hub-mirror.c.163.com/library/logstash:7.1.1
+    image: hub-mirror.c.163.com/library/logstash:${ELK_VERSION:-latest}
     volumes:
       - ./srv/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./srv/logstash/conf.d:/usr/share/logstash/conf.d/:ro
     ports:
-      - 5044:5044
+      - ${LOGSTASH_PORT:-5044}:5044
     restart: always
 
   filebeat:
     container_name: filebeat
-    image: store/elastic/filebeat:7.1.1
+    image: store/elastic/filebeat:${FILEBEAT_VERSION:-latest}
     user: root
     command: ["--strict.perms=false"]
     volumes:

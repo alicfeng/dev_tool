@@ -4,6 +4,14 @@ metadata:
   name: filebeat-nginx-config
 data:
   filebeat.yml: |-
+    max_procs: 1
+    scan_frequency: 5s
+    encoding: utf-8
+    ignore_older: 2h
+    close_inactive: 5m
+    harvester_buffer_size: 600000
+    close_inactive: 5m
+    close_timeout： 120m
     filebeat.prospectors:
       - type: log
         paths:
@@ -31,6 +39,10 @@ metadata:
   name: elk-nginx
 spec:
   template:
+    metadata:
+      labels:
+        project: k8s
+        app: filebeat
     spec:
       containers:
         - name: elk-nginx
