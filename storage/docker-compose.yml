@@ -1,0 +1,36 @@
+version: '2'
+services:
+  fastdfs-tracker:
+    hostname: fastdfs-tracker
+    container_name: fastdfs-tracker
+    image: hub-mirror.c.163.com/season/fastdfs:${FASTDFS_VERSION:-1.2}
+    network_mode: "host"
+    command: tracker
+    volumes:
+      - ./.data/tracker_data:/fastdfs/tracker/data
+
+  fastdfs-storage:
+    hostname: fastdfs-storage
+    container_name: fastdfs-storage
+    image: hub-mirror.c.163.com/season/fastdfs:${FASTDFS_VERSION:-1.2}
+    network_mode: "host"
+    volumes:
+      - ./.data/storage_data:/fastdfs/storage/data
+      - ./.data/store_path:/fastdfs/store_path
+    environment:
+      - TRACKER_SERVER=${TRACKER_SERVER}
+    command: storage
+    depends_on:
+      - fastdfs-tracker
+
+  fastdfs-nginx:
+    hostname: fastdfs-nginx
+    container_name: fastdfs-nginx
+    image: hub-mirror.c.163.com/season/fastdfs:${FASTDFS_VERSION:-1.2}
+    network_mode: "host"
+    volumes:
+      - ./srv/nginx.conf:/etc/nginx/conf/nginx.conf
+      - ./.data/store_path:/fastdfs/store_path
+    environment:
+      - TRACKER_SERVER=${TRACKER_SERVER}
+    command: nginx
