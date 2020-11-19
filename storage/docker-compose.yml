@@ -18,7 +18,7 @@ services:
       - ./.data/storage_data:/fastdfs/storage/data
       - ./.data/store_path:/fastdfs/store_path
     environment:
-      - TRACKER_SERVER=${TRACKER_SERVER}
+      - TRACKER_SERVER=${TRACKER_SERVER:-0.0.0.0:22122}
     command: storage
     depends_on:
       - fastdfs-tracker
