@@ -16,7 +16,6 @@ services:
     network_mode: "host"
     volumes:
       - ./.data/storage_data:/fastdfs/storage/data
-      - ./.data/store_path:/fastdfs/store_path
     environment:
       - TRACKER_SERVER=${TRACKER_SERVER:-0.0.0.0:22122}
     command: storage
@@ -29,8 +28,8 @@ services:
     image: hub-mirror.c.163.com/season/fastdfs:${FASTDFS_VERSION:-1.2}
     network_mode: "host"
     volumes:
-      - ./srv/nginx.conf:/etc/nginx/conf/nginx.conf
-      - ./.data/store_path:/fastdfs/store_path
+      - ./srv/nginx.conf:/etc/nginx/conf/nginx.conf:ro
+      - ./.data/storage_data:/fastdfs/storage:ro
     environment:
       - TRACKER_SERVER=${TRACKER_SERVER}
     command: nginx
