@@ -1,5 +1,5 @@
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
   name: prometheus
   namespace: monitor
@@ -10,18 +10,19 @@ metadata:
     prometheus.io/scrape: 'true'
     external-dns.alpha.kubernetes.io/hostname: prometheus.quicknuke.com.
 spec:
-  clusterIP: 10.1.10.8
   type: NodePort
   ports:
     - port: 9090
-      targetPort: evmonitor
-      name: evmonitor
+      targetPort: 9090
+      name: query-api
   selector:
     app: prometheus
     component: core
+
 ---
-apiVersion: extensions/v1beta1
+
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: prometheus-core
   namespace: monitor
@@ -30,6 +31,9 @@ metadata:
     component: core
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
   template:
     metadata:
       name: prometheus-main
@@ -38,7 +42,7 @@ spec:
         component: core
     spec:
       nodeSelector:
-          kubernetes.io/hostname: node01
+        kubernetes.io/hostname: master
       containers:
         - name: prometheus
           image: prom/prometheus:v2.23.0
