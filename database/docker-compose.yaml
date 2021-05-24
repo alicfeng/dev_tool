@@ -1,6 +1,6 @@
 version: "3"
 services:
-  ev-mysql:
+  mysql:
     container_name: mysql
     image: mysql:${MYSQL_VERSION:-5.7}
     ports:
@@ -15,7 +15,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     restart: always
 
-  ev-redis:
+  redis:
     container_name: redis
     image: redis:${REDIS_VERSION:-4.0.12}
     ports:
