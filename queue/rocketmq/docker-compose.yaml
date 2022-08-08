@@ -14,7 +14,7 @@ services:
     command: sh mqnamesrv
 
   rmqbroker:
-    image: rocketmqinc/${NAMESRV_VERSION:-4.4.0}
+    image: rocketmqinc/rocketmq:${NAMESRV_VERSION:-4.4.0}
     container_name: rmqbroker
     restart: always
     ports:

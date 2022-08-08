@@ -44,4 +44,4 @@ services:
 networks:
   default:
     external:
-      name: dev-network
+      name: ${NETWORK_ALIAS:-dev-network}
